@@ -83,6 +83,8 @@ describe('public API', () => {
     const stack = await readFile('examples/svg/cassette-transparent-stack.svg', 'utf8');
 
     assert.match(animated, /<animateMotion/);
-    assert.match(stack, /opacity="0\.2"/);
+    assert.match(animated, /dur="4s"/);
+    assert.match(stack, /fill="#d7a924"/);
+    assert.match(stack, /opacity="0\.34"/);
   });
 });

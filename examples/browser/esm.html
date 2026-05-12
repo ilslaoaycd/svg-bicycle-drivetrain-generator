@@ -19,10 +19,12 @@
       import { renderDrivetrainSvg } from '../../dist/index.mjs';
 
       document.querySelector('#demo').innerHTML = renderDrivetrainSvg({
-        preset: 'gravelWideRange',
-        selectedCog: 33,
-        style: 'oilSlick',
-        animation: { enabled: true, rpm: 72 }
+        chainring: 30,
+        cogs: [10, 12, 14, 16, 18, 21, 24, 28, 32, 36, 42, 52],
+        selectedCog: 36,
+        chainstay: 435,
+        style: 'blackGold',
+        animation: { enabled: true, rpm: 15 }
       });
     </script>
   </body>

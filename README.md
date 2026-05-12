@@ -6,17 +6,41 @@ The generator understands pitch-radius sprocket geometry, pitch-locked chain lay
 
 ## Demos
 
-| Cassette front | Transparent cassette stack |
-| --- | --- |
-| ![Cassette front](examples/svg/cassette-front.svg) | ![Transparent cassette stack](examples/svg/cassette-transparent-stack.svg) |
+### Real Cassette Previews
 
-| Chainring | Chain wave |
-| --- | --- |
-| ![Chainring](examples/svg/chainring.svg) | ![Chain wave](examples/svg/chain-wave.svg) |
+The transparent stack rendering is useful for inspecting cog spacing and tooth growth. These examples use real cassette ranges with more realistic metal finishes, plus one gold SRAM XX1 Eagle-style stack.
 
-| Static drivetrain | Animated drivetrain |
-| --- | --- |
-| ![Static drivetrain](examples/svg/drivetrain-static.svg) | ![Animated drivetrain](examples/svg/drivetrain-animated.svg) |
+| Cassette | Tooth counts | Preview |
+| --- | --- | --- |
+| SRAM XX1 Eagle Gold | 10-12-14-16-18-21-24-28-32-36-42-52 | ![SRAM XX1 Eagle Gold 10-52 cassette](examples/svg/cassette-sram-xx1-eagle-10-52-gold.svg) |
+| Shimano XT M8100 | 10-12-14-16-18-21-24-28-33-39-45-51 | ![Shimano XT M8100 10-51 cassette](examples/svg/cassette-shimano-xt-m8100-10-51.svg) |
+| SRAM GX Eagle | 10-12-14-16-18-21-24-28-32-36-42-52 | ![SRAM GX Eagle 10-52 cassette](examples/svg/cassette-sram-gx-eagle-10-52.svg) |
+| Shimano 105 R7100 | 11-12-13-14-15-17-19-21-24-27-30-34 | ![Shimano 105 R7100 11-34 cassette](examples/svg/cassette-shimano-105-r7100-11-34.svg) |
+| Campagnolo Ekar | 9-10-11-12-13-14-16-18-21-25-30-36-42 | ![Campagnolo Ekar 9-42 cassette](examples/svg/cassette-campagnolo-ekar-9-42.svg) |
+
+### Chains And Chainrings
+
+Different chain colors and path patterns can be rendered independently from a full drivetrain.
+
+| Silver straight chain | Black wrap chain | Gold loop chain |
+| --- | --- | --- |
+| ![Silver straight chain](examples/svg/chain-straight-silver.svg) | ![Black wrap chain](examples/svg/chain-wrap-black.svg) | ![Gold loop chain](examples/svg/chain-loop-gold.svg) |
+
+| 30T silver chainring | 34T black chainring | 40T alloy chainring |
+| --- | --- | --- |
+| ![30T silver chainring](examples/svg/chainring-30t-silver.svg) | ![34T black chainring](examples/svg/chainring-34t-black.svg) | ![40T alloy chainring](examples/svg/chainring-40t-alloy.svg) |
+
+### Full Drivetrain
+
+Both drivetrain demos use a 30T chainring with a SRAM Eagle 10-52 cassette in the third-largest cog, 36T. The animated version turns at 15 rpm.
+
+**Static drivetrain**
+
+<img src="examples/svg/drivetrain-static.svg" alt="Static SRAM Eagle drivetrain with 30T chainring and selected 36T cog" width="100%">
+
+**Animated drivetrain**
+
+<img src="examples/svg/drivetrain-animated.svg" alt="Animated SRAM Eagle drivetrain at 15 rpm with 30T chainring and selected 36T cog" width="100%">
 
 ## Install
 
@@ -50,10 +74,12 @@ const cassette = renderCassetteSvg(
 
 const generator = new BicycleDrivetrainSVG();
 const drivetrain = generator.drivetrain({
-  preset: 'gravelWideRange',
-  selectedCog: 33,
-  style: 'oilSlick',
-  animation: { enabled: true, rpm: 72 }
+  chainring: 30,
+  cogs: [10, 12, 14, 16, 18, 21, 24, 28, 32, 36, 42, 52],
+  selectedCog: 36,
+  chainstay: 435,
+  style: 'blackGold',
+  animation: { enabled: true, rpm: 15 }
 });
 ```
 
@@ -73,10 +99,12 @@ const svg = renderChainringSvg(42, { style: 'blackGold' });
 <script>
   document.querySelector('#bike').innerHTML =
     BicycleDrivetrainSVG.renderDrivetrainSvg({
-      preset: 'mtbTenFiftyTwo',
-      selectedCog: 42,
-      style: 'ghostStack',
-      animation: { enabled: true, rpm: 70 }
+      chainring: 30,
+      cogs: [10, 12, 14, 16, 18, 21, 24, 28, 32, 36, 42, 52],
+      selectedCog: 36,
+      chainstay: 435,
+      style: 'blackGold',
+      animation: { enabled: true, rpm: 15 }
     });
 </script>
 ```
@@ -152,13 +180,13 @@ Supported path types are `straight`, `curve`, `wave`, `wrap`, and `loop`.
 
 ```js
 renderDrivetrainSvg({
-  chainring: 40,
-  cogs: [10, 12, 14, 16, 18, 21, 24, 28, 33, 39, 45, 51],
-  selectedCog: 33,
-  chainstay: 430,
+  chainring: 30,
+  cogs: [10, 12, 14, 16, 18, 21, 24, 28, 32, 36, 42, 52],
+  selectedCog: 36,
+  chainstay: 435,
   showText: true,
-  style: 'classicSteel',
-  animation: { enabled: true, rpm: 72 }
+  style: 'blackGold',
+  animation: { enabled: true, rpm: 15 }
 });
 ```
 

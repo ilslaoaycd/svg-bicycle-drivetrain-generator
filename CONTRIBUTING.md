@@ -21,3 +21,4 @@ Keep `src/` environment-neutral. Runtime code should return SVG strings and shou
 - Small, documented API additions.
 - New style presets that make real bicycle parts easier to inspect.
 - Tests that lock down geometry or import compatibility.
+- Real drivetrain data: cassette names, tooth counts, chainring sizes, colors/finishes, model years, and source links are especially welcome so the preset/demo dataset can grow beyond the starter examples.
