@@ -42,13 +42,7 @@ Both drivetrain demos use a 30T chainring with a SRAM Eagle 10-52 cassette in th
 
 <img src="examples/svg/drivetrain-animated.svg" alt="Animated SRAM Eagle drivetrain at 15 rpm with 30T chainring and selected 36T cog" width="100%">
 
-## Install
-
-```bash
-npm install svg-bicycle-drivetrain-generator
-```
-
-Or install from GitHub:
+## Install from GitHub:
 
 ```bash
 npm install github:ilslaoaycd/svg-bicycle-drivetrain-generator
