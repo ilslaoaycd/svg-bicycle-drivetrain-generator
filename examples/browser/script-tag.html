@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SVG Bicycle Drivetrain Generator Script Demo</title>
+    <style>
+      body { margin: 0; font-family: system-ui, sans-serif; background: #111827; color: #f8fafc; }
+      main { max-width: 900px; margin: 0 auto; padding: 32px; }
+      #demo { min-height: 360px; background: #ffffff; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Script Tag Demo</h1>
+      <div id="demo"></div>
+    </main>
+    <script src="../../dist/bicycle-drivetrain-svg.global.js"></script>
+    <script>
+      document.querySelector('#demo').innerHTML = BicycleDrivetrainSVG.renderCassetteSvg(
+        [10, 12, 14, 16, 18, 21, 24, 28, 32, 36, 42, 52],
+        { style: 'xrayCassette' }
+      );
+    </script>
+  </body>
+</html>
