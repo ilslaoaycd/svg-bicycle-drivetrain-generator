@@ -32,39 +32,21 @@ Different chain colors and path patterns can be rendered independently from a fu
 
 ### Full Drivetrain
 
-Both drivetrain demos use a 30T chainring with a SRAM Eagle 10-52 cassette in the third-largest cog, 36T. The animated version turns at 8 rpm with a silver chain, dark grey chainring, dark largest cog, and translucent cassette stack.
+Both drivetrain demos use a 30T chainring with a SRAM Eagle 10-52 cassette in the third-largest cog, 36T. The animated version turns at 8 rpm with a silver chain, dark grey chainring, lighter dark largest cog, and translucent cassette stack.
 
 **Static drivetrain**
 
-<table>
-  <tr>
-    <td bgcolor="#f8fafc">
-      <img src="examples/svg/drivetrain-static.svg" alt="Static SRAM Eagle drivetrain with 30T chainring and selected 36T cog" width="100%">
-    </td>
-  </tr>
-</table>
+<img src="examples/svg/drivetrain-static.svg" alt="Static SRAM Eagle drivetrain with 30T chainring and selected 36T cog" width="100%">
 
 **Animated drivetrain**
 
-<table>
-  <tr>
-    <td bgcolor="#f8fafc">
-      <img src="examples/svg/drivetrain-animated.svg" alt="Animated SRAM Eagle drivetrain at 8 rpm with 30T chainring and selected 36T cog" width="100%">
-    </td>
-  </tr>
-</table>
+<img src="examples/svg/drivetrain-animated.svg" alt="Animated SRAM Eagle drivetrain at 8 rpm with 30T chainring and selected 36T cog" width="100%">
 
 ### Single Speed
 
 A one-cog drivetrain demo: 38T chainring, a single 18T rear cog, animated at 12 rpm with fun colors and a flattop chain.
 
-<table>
-  <tr>
-    <td bgcolor="#f8fafc">
-      <img src="examples/svg/single-speed-animated.svg" alt="Animated single speed drivetrain with 38T chainring, 18T cog, and flattop chain" width="100%">
-    </td>
-  </tr>
-</table>
+<img src="examples/svg/single-speed-animated.svg" alt="Animated single speed drivetrain with 38T chainring, 18T cog, and flattop chain" width="100%">
 
 ## Install from GitHub:
 

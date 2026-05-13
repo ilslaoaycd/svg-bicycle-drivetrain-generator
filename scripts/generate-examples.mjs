@@ -68,11 +68,11 @@ const warmAlloy = {
 };
 
 const silverChainDarkRingDrivetrain = {
-  fillColors: ['#111827', '#cbd5e1', '#2f3742'],
-  outlineColor: '#1f2937',
+  fillColors: ['#3f4b5a', '#cbd5e1', '#4b5563'],
+  outlineColor: '#94a3b8',
   textColor: '#334155',
-  layerOpacity: 0.3,
-  selectedOpacity: 0.72,
+  layerOpacity: 0.34,
+  selectedOpacity: 0.9,
   chainOuter: '#e5e7eb',
   chainInner: '#aeb7c2',
   chainPin: '#ffffff'
