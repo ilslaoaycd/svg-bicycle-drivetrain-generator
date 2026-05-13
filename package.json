@@ -1,7 +1,15 @@
 {
   "name": "svg-bicycle-drivetrain-generator",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Pure JavaScript SVG generator for bicycle cassettes, chainrings, chains, and animated drivetrain layouts.",
+  "homepage": "https://github.com/ilslaoaycd/svg-bicycle-drivetrain-generator#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ilslaoaycd/svg-bicycle-drivetrain-generator.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ilslaoaycd/svg-bicycle-drivetrain-generator/issues"
+  },
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",

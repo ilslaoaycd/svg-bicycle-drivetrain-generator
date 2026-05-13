@@ -48,7 +48,17 @@ A one-cog drivetrain demo: 38T chainring, a single 18T rear cog, animated at 12 
 
 <img src="examples/svg/single-speed-animated.svg" alt="Animated single speed drivetrain with 38T chainring, 18T cog, and flattop chain" width="100%">
 
-## Install from GitHub:
+## Install
+
+Install the package from npm:
+
+```bash
+npm install svg-bicycle-drivetrain-generator
+```
+
+Package page: https://www.npmjs.com/package/svg-bicycle-drivetrain-generator
+
+You can also install directly from GitHub:
 
 ```bash
 npm install github:ilslaoaycd/svg-bicycle-drivetrain-generator
