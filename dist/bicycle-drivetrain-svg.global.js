@@ -451,13 +451,14 @@ var BicycleDrivetrainSVG = (() => {
         ...config
       };
     }
-    getFlatTopPlatePath(radius) {
+    getFlatTopPlatePath(radius, waist) {
       const halfPitch = this.config.pitch / 2;
       return [
         `M ${-halfPitch} ${-radius}`,
         `L ${halfPitch} ${-radius}`,
         `A ${radius} ${radius} 0 0 1 ${halfPitch} ${radius}`,
-        `L ${-halfPitch} ${radius}`,
+        `C ${this.config.pitch / 3} ${radius}, ${this.config.pitch / 6} ${waist}, 0 ${waist}`,
+        `C ${-this.config.pitch / 6} ${waist}, ${-this.config.pitch / 3} ${radius}, ${-halfPitch} ${radius}`,
         `A ${radius} ${radius} 0 0 1 ${-halfPitch} ${-radius}`,
         "Z"
       ].join(" ");
@@ -476,7 +477,7 @@ var BicycleDrivetrainSVG = (() => {
       ].join(" ");
     }
     getLinkPlatePath(radius, waist) {
-      return this.config.flatTop ? this.getFlatTopPlatePath(radius) : this.getPlatePath(radius, waist);
+      return this.config.flatTop ? this.getFlatTopPlatePath(radius, waist) : this.getPlatePath(radius, waist);
     }
     getInnerLinkSVG(x, y, angleDeg) {
       const {
@@ -1286,19 +1287,20 @@ var BicycleDrivetrainSVG = (() => {
         "Z"
       ].join(" ");
     }
-    _getFlatTopPlatePath(radius) {
+    _getFlatTopPlatePath(radius, waist) {
       const halfPitch = this.pitch / 2;
       return [
         `M ${-halfPitch} ${-radius}`,
         `L ${halfPitch} ${-radius}`,
         `A ${radius} ${radius} 0 0 1 ${halfPitch} ${radius}`,
-        `L ${-halfPitch} ${radius}`,
+        `C ${this.pitch / 3} ${radius}, ${this.pitch / 6} ${waist}, 0 ${waist}`,
+        `C ${-this.pitch / 6} ${waist}, ${-this.pitch / 3} ${radius}, ${-halfPitch} ${radius}`,
         `A ${radius} ${radius} 0 0 1 ${-halfPitch} ${-radius}`,
         "Z"
       ].join(" ");
     }
     _getChainPlatePath(radius, waist, style) {
-      return style.flatTopChain ? this._getFlatTopPlatePath(radius) : this._getPlatePath(radius, waist);
+      return style.flatTopChain ? this._getFlatTopPlatePath(radius, waist) : this._getPlatePath(radius, waist);
     }
     _normalizeCounterclockwiseDelta(startAngle, endAngle) {
       let delta = endAngle - startAngle;

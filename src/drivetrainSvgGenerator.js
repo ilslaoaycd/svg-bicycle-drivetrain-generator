@@ -776,13 +776,14 @@ export class DrivetrainSVGGenerator {
     ].join(' ');
   }
 
-  _getFlatTopPlatePath(radius) {
+  _getFlatTopPlatePath(radius, waist) {
     const halfPitch = this.pitch / 2;
     return [
       `M ${-halfPitch} ${-radius}`,
       `L ${halfPitch} ${-radius}`,
       `A ${radius} ${radius} 0 0 1 ${halfPitch} ${radius}`,
-      `L ${-halfPitch} ${radius}`,
+      `C ${this.pitch / 3} ${radius}, ${this.pitch / 6} ${waist}, 0 ${waist}`,
+      `C ${-this.pitch / 6} ${waist}, ${-this.pitch / 3} ${radius}, ${-halfPitch} ${radius}`,
       `A ${radius} ${radius} 0 0 1 ${-halfPitch} ${-radius}`,
       'Z'
     ].join(' ');
@@ -790,7 +791,7 @@ export class DrivetrainSVGGenerator {
 
   _getChainPlatePath(radius, waist, style) {
     return style.flatTopChain
-      ? this._getFlatTopPlatePath(radius)
+      ? this._getFlatTopPlatePath(radius, waist)
       : this._getPlatePath(radius, waist);
   }
 

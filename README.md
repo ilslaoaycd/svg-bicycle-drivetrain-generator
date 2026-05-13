@@ -170,7 +170,7 @@ renderChainSvg(18, 'wave', {
 ```
 
 Supported path types are `straight`, `curve`, `wave`, `wrap`, and `loop`.
-Use `flatTop: true` for straight-edged chain plates like SRAM Flattop-style chains. It affects both inner and outer link outlines and works with every path type.
+Use `flatTop: true` for chain plates with a straight top edge like SRAM Flattop-style chains. It affects both inner and outer link outlines, keeps the lower waist curve, and works with every path type.
 
 ### Drivetrain
 
@@ -190,7 +190,7 @@ renderDrivetrainSvg({
 ```
 
 `chainstay` is in millimeters. When animation is enabled, the chainring, cassette, and chain use native SVG animation markup.
-Set `styleConfig.flatTopChain` to `true` when full drivetrain renders should use flattop chain plates.
+Set `styleConfig.flatTopChain` to `true` when full drivetrain renders should use flattop chain plates with a straight top edge and regular curved lower edge.
 
 ## Presets
 

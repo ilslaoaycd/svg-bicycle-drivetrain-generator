@@ -23,14 +23,15 @@ export class ChainSVGGenerator {
     };
   }
 
-  getFlatTopPlatePath(radius) {
+  getFlatTopPlatePath(radius, waist) {
     const halfPitch = this.config.pitch / 2;
 
     return [
       `M ${-halfPitch} ${-radius}`,
       `L ${halfPitch} ${-radius}`,
       `A ${radius} ${radius} 0 0 1 ${halfPitch} ${radius}`,
-      `L ${-halfPitch} ${radius}`,
+      `C ${this.config.pitch / 3} ${radius}, ${this.config.pitch / 6} ${waist}, 0 ${waist}`,
+      `C ${-this.config.pitch / 6} ${waist}, ${-this.config.pitch / 3} ${radius}, ${-halfPitch} ${radius}`,
       `A ${radius} ${radius} 0 0 1 ${-halfPitch} ${-radius}`,
       'Z'
     ].join(' ');
@@ -53,7 +54,7 @@ export class ChainSVGGenerator {
 
   getLinkPlatePath(radius, waist) {
     return this.config.flatTop
-      ? this.getFlatTopPlatePath(radius)
+      ? this.getFlatTopPlatePath(radius, waist)
       : this.getPlatePath(radius, waist);
   }
 

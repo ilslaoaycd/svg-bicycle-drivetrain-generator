@@ -52,18 +52,18 @@ describe('public API', () => {
     assert.match(svg, /opacity="0\.2"/);
   });
 
-  test('flattop chain option removes the inward waist curves', () => {
+  test('flattop chain option removes only the top inward waist curve', () => {
     const standard = renderChainSvg(2, 'straight', { showPins: false });
     const flatTop = renderChainSvg(2, 'straight', { flatTop: true, showPins: false });
 
     assert.match(standard, /C -33\.333 -34, -16\.667 -25, 0 -25/);
     assert.match(standard, /C -16\.667 25, -33\.333 34, -50 34/);
     assert.doesNotMatch(flatTop, /C -33\.333 -34, -16\.667 -25, 0 -25/);
-    assert.doesNotMatch(flatTop, /C -16\.667 25, -33\.333 34, -50 34/);
+    assert.match(flatTop, /C -16\.667 25, -33\.333 34, -50 34/);
     assert.match(flatTop, /L 50 -34/);
-    assert.match(flatTop, /L -50 34/);
     assert.match(flatTop, /L 50 -32/);
-    assert.match(flatTop, /L -50 32/);
+    assert.doesNotMatch(flatTop, /L -50 34/);
+    assert.doesNotMatch(flatTop, /L -50 32/);
   });
 
   test('facade passes the flattop chain option through', () => {
@@ -75,6 +75,7 @@ describe('public API', () => {
     assert.match(svg, /L 50 -34/);
     assert.match(svg, /L 50 -32/);
     assert.doesNotMatch(svg, /C -33\.333 -34, -16\.667 -25, 0 -25/);
+    assert.match(svg, /C -16\.667 25, -33\.333 34, -50 34/);
   });
 
   test('full drivetrain can render static and animated flattop chains', () => {
@@ -97,10 +98,11 @@ describe('public API', () => {
     });
 
     assert.match(staticSvg, /L 6\.35 -4\.318/);
-    assert.match(staticSvg, /L -6\.35 4\.318/);
+    assert.match(staticSvg, /C -2\.117 3\.175, -4\.233 4\.318, -6\.35 4\.318/);
     assert.doesNotMatch(staticSvg, /C -4\.233 -4\.318, -2\.117 -3\.175, 0 -3\.175/);
     assert.match(animatedSvg, /<animateMotion/);
     assert.match(animatedSvg, /L 6\.35 -4\.318/);
+    assert.match(animatedSvg, /C -2\.117 3\.175, -4\.233 4\.318, -6\.35 4\.318/);
     assert.doesNotMatch(animatedSvg, /C -4\.233 -4\.318, -2\.117 -3\.175, 0 -3\.175/);
   });
 
@@ -141,5 +143,6 @@ describe('public API', () => {
     assert.match(stack, /opacity="0\.34"/);
     assert.match(flatTopChain, /L 50 -34/);
     assert.doesNotMatch(flatTopChain, /C -33\.333 -34, -16\.667 -25, 0 -25/);
+    assert.match(flatTopChain, /C -16\.667 25, -33\.333 34, -50 34/);
   });
 });
