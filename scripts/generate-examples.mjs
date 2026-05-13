@@ -67,6 +67,29 @@ const warmAlloy = {
   chainPin: '#f8f4ed'
 };
 
+const silverChainDarkRingDrivetrain = {
+  fillColors: ['#111827', '#cbd5e1', '#2f3742'],
+  outlineColor: '#1f2937',
+  textColor: '#334155',
+  layerOpacity: 0.3,
+  selectedOpacity: 0.72,
+  chainOuter: '#e5e7eb',
+  chainInner: '#aeb7c2',
+  chainPin: '#ffffff'
+};
+
+const singleSpeedCandy = {
+  fillColors: ['#f97316', '#facc15', '#7c3aed'],
+  outlineColor: '#312e81',
+  textColor: '#312e81',
+  layerOpacity: 1,
+  selectedOpacity: 1,
+  chainOuter: '#67e8f9',
+  chainInner: '#f0abfc',
+  chainPin: '#fff7ed',
+  flatTopChain: true
+};
+
 const examples = {
   'cassette-front.svg': renderCassetteSvg(
     shimanoXt,
@@ -161,7 +184,7 @@ const examples = {
     selectedCog: 36,
     chainstay: 435,
     showText: true,
-    styleConfig: sramGold
+    styleConfig: silverChainDarkRingDrivetrain
   }),
   'drivetrain-animated.svg': renderDrivetrainSvg({
     chainring: 30,
@@ -169,10 +192,22 @@ const examples = {
     selectedCog: 36,
     chainstay: 435,
     showText: true,
-    styleConfig: sramGold,
+    styleConfig: silverChainDarkRingDrivetrain,
     animation: {
       enabled: true,
-      rpm: 15
+      rpm: 8
+    }
+  }),
+  'single-speed-animated.svg': renderDrivetrainSvg({
+    chainring: 38,
+    cogs: [18],
+    selectedCog: 18,
+    chainstay: 405,
+    showText: true,
+    styleConfig: singleSpeedCandy,
+    animation: {
+      enabled: true,
+      rpm: 12
     }
   })
 };

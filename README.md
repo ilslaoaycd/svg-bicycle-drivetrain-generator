@@ -32,7 +32,7 @@ Different chain colors and path patterns can be rendered independently from a fu
 
 ### Full Drivetrain
 
-Both drivetrain demos use a 30T chainring with a SRAM Eagle 10-52 cassette in the third-largest cog, 36T. The animated version turns at 15 rpm.
+Both drivetrain demos use a 30T chainring with a SRAM Eagle 10-52 cassette in the third-largest cog, 36T. The animated version turns at 8 rpm with a silver chain, dark grey chainring, dark largest cog, and translucent cassette stack.
 
 **Static drivetrain**
 
@@ -40,7 +40,13 @@ Both drivetrain demos use a 30T chainring with a SRAM Eagle 10-52 cassette in th
 
 **Animated drivetrain**
 
-<img src="examples/svg/drivetrain-animated.svg" alt="Animated SRAM Eagle drivetrain at 15 rpm with 30T chainring and selected 36T cog" width="100%">
+<img src="examples/svg/drivetrain-animated.svg" alt="Animated SRAM Eagle drivetrain at 8 rpm with 30T chainring and selected 36T cog" width="100%">
+
+### Single Speed
+
+A one-cog drivetrain demo: 38T chainring, a single 18T rear cog, animated at 12 rpm with fun colors and a flattop chain.
+
+<img src="examples/svg/single-speed-animated.svg" alt="Animated single speed drivetrain with 38T chainring, 18T cog, and flattop chain" width="100%">
 
 ## Install from GitHub:
 
@@ -73,7 +79,7 @@ const drivetrain = generator.drivetrain({
   selectedCog: 36,
   chainstay: 435,
   style: 'blackGold',
-  animation: { enabled: true, rpm: 15 }
+  animation: { enabled: true, rpm: 8 }
 });
 ```
 
@@ -98,7 +104,7 @@ const svg = renderChainringSvg(42, { style: 'blackGold' });
       selectedCog: 36,
       chainstay: 435,
       style: 'blackGold',
-      animation: { enabled: true, rpm: 15 }
+      animation: { enabled: true, rpm: 8 }
     });
 </script>
 ```
@@ -185,7 +191,7 @@ renderDrivetrainSvg({
   styleConfig: {
     flatTopChain: true
   },
-  animation: { enabled: true, rpm: 15 }
+  animation: { enabled: true, rpm: 8 }
 });
 ```
 

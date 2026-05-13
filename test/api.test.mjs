@@ -93,7 +93,7 @@ describe('public API', () => {
       ...options,
       animation: {
         enabled: true,
-        rpm: 15
+        rpm: 8
       }
     });
 
@@ -134,11 +134,17 @@ describe('public API', () => {
 
   test('sample SVG files are present and render demo content', async () => {
     const animated = await readFile('examples/svg/drivetrain-animated.svg', 'utf8');
+    const singleSpeed = await readFile('examples/svg/single-speed-animated.svg', 'utf8');
     const stack = await readFile('examples/svg/cassette-transparent-stack.svg', 'utf8');
     const flatTopChain = await readFile('examples/svg/chain-flattop-silver.svg', 'utf8');
 
     assert.match(animated, /<animateMotion/);
-    assert.match(animated, /dur="4s"/);
+    assert.match(animated, /dur="7\.5s"/);
+    assert.match(singleSpeed, /<animateMotion/);
+    assert.match(singleSpeed, />38T</);
+    assert.match(singleSpeed, />18T</);
+    assert.match(singleSpeed, /L 6\.35 -4\.318/);
+    assert.match(singleSpeed, /dur="5s"/);
     assert.match(stack, /fill="#d7a924"/);
     assert.match(stack, /opacity="0\.34"/);
     assert.match(flatTopChain, /L 50 -34/);
