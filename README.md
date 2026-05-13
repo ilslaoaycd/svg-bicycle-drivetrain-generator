@@ -36,17 +36,35 @@ Both drivetrain demos use a 30T chainring with a SRAM Eagle 10-52 cassette in th
 
 **Static drivetrain**
 
-<img src="examples/svg/drivetrain-static.svg" alt="Static SRAM Eagle drivetrain with 30T chainring and selected 36T cog" width="100%">
+<table>
+  <tr>
+    <td bgcolor="#f8fafc">
+      <img src="examples/svg/drivetrain-static.svg" alt="Static SRAM Eagle drivetrain with 30T chainring and selected 36T cog" width="100%">
+    </td>
+  </tr>
+</table>
 
 **Animated drivetrain**
 
-<img src="examples/svg/drivetrain-animated.svg" alt="Animated SRAM Eagle drivetrain at 8 rpm with 30T chainring and selected 36T cog" width="100%">
+<table>
+  <tr>
+    <td bgcolor="#f8fafc">
+      <img src="examples/svg/drivetrain-animated.svg" alt="Animated SRAM Eagle drivetrain at 8 rpm with 30T chainring and selected 36T cog" width="100%">
+    </td>
+  </tr>
+</table>
 
 ### Single Speed
 
 A one-cog drivetrain demo: 38T chainring, a single 18T rear cog, animated at 12 rpm with fun colors and a flattop chain.
 
-<img src="examples/svg/single-speed-animated.svg" alt="Animated single speed drivetrain with 38T chainring, 18T cog, and flattop chain" width="100%">
+<table>
+  <tr>
+    <td bgcolor="#f8fafc">
+      <img src="examples/svg/single-speed-animated.svg" alt="Animated single speed drivetrain with 38T chainring, 18T cog, and flattop chain" width="100%">
+    </td>
+  </tr>
+</table>
 
 ## Install from GitHub:
 
