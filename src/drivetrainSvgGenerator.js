@@ -412,7 +412,8 @@ export class DrivetrainSVGGenerator {
       chainInner: styleConfig.chainInner || '#94a3b8',
       chainPin: styleConfig.chainPin || '#f8fafc',
       cassetteOpacity: styleConfig.layerOpacity !== undefined ? styleConfig.layerOpacity : 0.35,
-      selectedOpacity: styleConfig.selectedOpacity !== undefined ? styleConfig.selectedOpacity : 1
+      selectedOpacity: styleConfig.selectedOpacity !== undefined ? styleConfig.selectedOpacity : 1,
+      flatTopChain: styleConfig.flatTopChain === true
     };
   }
 
@@ -466,7 +467,7 @@ export class DrivetrainSVGGenerator {
     const waist = this.pitch * (isOuter ? 0.25 : 0.24);
     const fill = isOuter ? style.chainOuter : style.chainInner;
     let svg = `<g id="${id}">`;
-    svg += `<path d="${this._getPlatePath(radius, waist)}" fill="${fill}" stroke="${style.outlineColor}" `;
+    svg += `<path d="${this._getChainPlatePath(radius, waist, style)}" fill="${fill}" stroke="${style.outlineColor}" `;
     svg += 'stroke-width="0.45" stroke-linejoin="round"/>';
     svg += '</g>';
     return svg;
@@ -745,7 +746,7 @@ export class DrivetrainSVGGenerator {
     const radius = this.pitch * (isOuter ? 0.34 : 0.32);
     const waist = this.pitch * (isOuter ? 0.25 : 0.24);
     const fill = isOuter ? style.chainOuter : style.chainInner;
-    const path = this._getPlatePath(radius, waist);
+    const path = this._getChainPlatePath(radius, waist, style);
 
     let svg = `<g transform="translate(${centerX} ${centerY}) rotate(${angle})">`;
     svg += `<path d="${path}" fill="${fill}" stroke="${style.outlineColor}" `;
@@ -773,6 +774,24 @@ export class DrivetrainSVGGenerator {
       `A ${radius} ${radius} 0 0 1 ${-halfPitch} ${-radius}`,
       'Z'
     ].join(' ');
+  }
+
+  _getFlatTopPlatePath(radius) {
+    const halfPitch = this.pitch / 2;
+    return [
+      `M ${-halfPitch} ${-radius}`,
+      `L ${halfPitch} ${-radius}`,
+      `A ${radius} ${radius} 0 0 1 ${halfPitch} ${radius}`,
+      `L ${-halfPitch} ${radius}`,
+      `A ${radius} ${radius} 0 0 1 ${-halfPitch} ${-radius}`,
+      'Z'
+    ].join(' ');
+  }
+
+  _getChainPlatePath(radius, waist, style) {
+    return style.flatTopChain
+      ? this._getFlatTopPlatePath(radius)
+      : this._getPlatePath(radius, waist);
   }
 
   _normalizeCounterclockwiseDelta(startAngle, endAngle) {

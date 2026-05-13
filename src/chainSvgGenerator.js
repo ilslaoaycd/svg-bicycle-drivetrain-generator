@@ -18,8 +18,22 @@ export class ChainSVGGenerator {
       strokeWidth: 3,
       showPins: true,
       showRollers: false,
+      flatTop: false,
       ...config
     };
+  }
+
+  getFlatTopPlatePath(radius) {
+    const halfPitch = this.config.pitch / 2;
+
+    return [
+      `M ${-halfPitch} ${-radius}`,
+      `L ${halfPitch} ${-radius}`,
+      `A ${radius} ${radius} 0 0 1 ${halfPitch} ${radius}`,
+      `L ${-halfPitch} ${radius}`,
+      `A ${radius} ${radius} 0 0 1 ${-halfPitch} ${-radius}`,
+      'Z'
+    ].join(' ');
   }
 
   getPlatePath(radius, waist) {
@@ -37,6 +51,12 @@ export class ChainSVGGenerator {
     ].join(' ');
   }
 
+  getLinkPlatePath(radius, waist) {
+    return this.config.flatTop
+      ? this.getFlatTopPlatePath(radius)
+      : this.getPlatePath(radius, waist);
+  }
+
   getInnerLinkSVG(x, y, angleDeg) {
     const {
       innerRadius,
@@ -49,7 +69,7 @@ export class ChainSVGGenerator {
       strokeWidth
     } = this.config;
     const p = this.config.pitch;
-    const path = this.getPlatePath(innerRadius, innerWaist);
+    const path = this.getLinkPlatePath(innerRadius, innerWaist);
 
     let svg = `<g transform="translate(${x}, ${y}) rotate(${angleDeg})">`;
     svg += `<path d="${path}" fill="${innerColor}" stroke="${strokeColor}" `;
@@ -70,7 +90,7 @@ export class ChainSVGGenerator {
 
   getOuterLinkSVG(x, y, angleDeg) {
     const { outerRadius, outerWaist, outerColor, strokeColor, strokeWidth } = this.config;
-    const path = this.getPlatePath(outerRadius, outerWaist);
+    const path = this.getLinkPlatePath(outerRadius, outerWaist);
 
     let svg = `<g transform="translate(${x}, ${y}) rotate(${angleDeg})">`;
     svg += `<path d="${path}" fill="${outerColor}" stroke="${strokeColor}" `;

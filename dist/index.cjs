@@ -447,8 +447,20 @@ var ChainSVGGenerator = class {
       strokeWidth: 3,
       showPins: true,
       showRollers: false,
+      flatTop: false,
       ...config
     };
+  }
+  getFlatTopPlatePath(radius) {
+    const halfPitch = this.config.pitch / 2;
+    return [
+      `M ${-halfPitch} ${-radius}`,
+      `L ${halfPitch} ${-radius}`,
+      `A ${radius} ${radius} 0 0 1 ${halfPitch} ${radius}`,
+      `L ${-halfPitch} ${radius}`,
+      `A ${radius} ${radius} 0 0 1 ${-halfPitch} ${-radius}`,
+      "Z"
+    ].join(" ");
   }
   getPlatePath(radius, waist) {
     const p = this.config.pitch;
@@ -463,6 +475,9 @@ var ChainSVGGenerator = class {
       "Z"
     ].join(" ");
   }
+  getLinkPlatePath(radius, waist) {
+    return this.config.flatTop ? this.getFlatTopPlatePath(radius) : this.getPlatePath(radius, waist);
+  }
   getInnerLinkSVG(x, y, angleDeg) {
     const {
       innerRadius,
@@ -475,7 +490,7 @@ var ChainSVGGenerator = class {
       strokeWidth
     } = this.config;
     const p = this.config.pitch;
-    const path = this.getPlatePath(innerRadius, innerWaist);
+    const path = this.getLinkPlatePath(innerRadius, innerWaist);
     let svg = `<g transform="translate(${x}, ${y}) rotate(${angleDeg})">`;
     svg += `<path d="${path}" fill="${innerColor}" stroke="${strokeColor}" `;
     svg += `stroke-width="${strokeWidth}" stroke-linejoin="round"/>`;
@@ -492,7 +507,7 @@ var ChainSVGGenerator = class {
   }
   getOuterLinkSVG(x, y, angleDeg) {
     const { outerRadius, outerWaist, outerColor, strokeColor, strokeWidth } = this.config;
-    const path = this.getPlatePath(outerRadius, outerWaist);
+    const path = this.getLinkPlatePath(outerRadius, outerWaist);
     let svg = `<g transform="translate(${x}, ${y}) rotate(${angleDeg})">`;
     svg += `<path d="${path}" fill="${outerColor}" stroke="${strokeColor}" `;
     svg += `stroke-width="${strokeWidth}" stroke-linejoin="round"/>`;
@@ -955,7 +970,8 @@ var DrivetrainSVGGenerator = class {
       chainInner: styleConfig.chainInner || "#94a3b8",
       chainPin: styleConfig.chainPin || "#f8fafc",
       cassetteOpacity: styleConfig.layerOpacity !== void 0 ? styleConfig.layerOpacity : 0.35,
-      selectedOpacity: styleConfig.selectedOpacity !== void 0 ? styleConfig.selectedOpacity : 1
+      selectedOpacity: styleConfig.selectedOpacity !== void 0 ? styleConfig.selectedOpacity : 1,
+      flatTopChain: styleConfig.flatTopChain === true
     };
   }
   _renderAnimatedSvg(layout, style, options) {
@@ -1004,7 +1020,7 @@ var DrivetrainSVGGenerator = class {
     const waist = this.pitch * (isOuter ? 0.25 : 0.24);
     const fill = isOuter ? style.chainOuter : style.chainInner;
     let svg = `<g id="${id}">`;
-    svg += `<path d="${this._getPlatePath(radius, waist)}" fill="${fill}" stroke="${style.outlineColor}" `;
+    svg += `<path d="${this._getChainPlatePath(radius, waist, style)}" fill="${fill}" stroke="${style.outlineColor}" `;
     svg += 'stroke-width="0.45" stroke-linejoin="round"/>';
     svg += "</g>";
     return svg;
@@ -1244,7 +1260,7 @@ var DrivetrainSVGGenerator = class {
     const radius = this.pitch * (isOuter ? 0.34 : 0.32);
     const waist = this.pitch * (isOuter ? 0.25 : 0.24);
     const fill = isOuter ? style.chainOuter : style.chainInner;
-    const path = this._getPlatePath(radius, waist);
+    const path = this._getChainPlatePath(radius, waist, style);
     let svg = `<g transform="translate(${centerX} ${centerY}) rotate(${angle})">`;
     svg += `<path d="${path}" fill="${fill}" stroke="${style.outlineColor}" `;
     svg += 'stroke-width="0.45" stroke-linejoin="round"/>';
@@ -1269,6 +1285,20 @@ var DrivetrainSVGGenerator = class {
       `A ${radius} ${radius} 0 0 1 ${-halfPitch} ${-radius}`,
       "Z"
     ].join(" ");
+  }
+  _getFlatTopPlatePath(radius) {
+    const halfPitch = this.pitch / 2;
+    return [
+      `M ${-halfPitch} ${-radius}`,
+      `L ${halfPitch} ${-radius}`,
+      `A ${radius} ${radius} 0 0 1 ${halfPitch} ${radius}`,
+      `L ${-halfPitch} ${radius}`,
+      `A ${radius} ${radius} 0 0 1 ${-halfPitch} ${-radius}`,
+      "Z"
+    ].join(" ");
+  }
+  _getChainPlatePath(radius, waist, style) {
+    return style.flatTopChain ? this._getFlatTopPlatePath(radius) : this._getPlatePath(radius, waist);
   }
   _normalizeCounterclockwiseDelta(startAngle, endAngle) {
     let delta = endAngle - startAngle;
@@ -1457,7 +1487,8 @@ var BicycleDrivetrainSVG = class {
       rollerHoleColor: styleConfig.rollerHoleColor,
       strokeColor: styleConfig.outlineColor || styleConfig.strokeColor,
       showPins: options.showPins,
-      showRollers: options.showRollers
+      showRollers: options.showRollers,
+      flatTop: options.flatTop
     };
     Object.keys(chainConfig).forEach((key) => {
       if (chainConfig[key] === void 0) delete chainConfig[key];

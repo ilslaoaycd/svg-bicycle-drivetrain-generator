@@ -121,6 +121,18 @@ const examples = {
     },
     showRollers: true
   }),
+  'chain-flattop-silver.svg': renderChainSvg(16, 'straight', {
+    styleConfig: {
+      chainOuter: '#d9dde2',
+      chainInner: '#b4bac2',
+      chainPin: '#f8fafc',
+      outlineColor: '#6b7280',
+      rollerColor: '#e5e7eb',
+      rollerHoleColor: '#374151'
+    },
+    flatTop: true,
+    showRollers: true
+  }),
   'chain-wrap-black.svg': renderChainSvg(20, 'wrap', {
     styleConfig: {
       chainOuter: '#1f2937',

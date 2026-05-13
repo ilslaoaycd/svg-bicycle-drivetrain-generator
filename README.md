@@ -22,9 +22,9 @@ The transparent stack rendering is useful for inspecting cog spacing and tooth g
 
 Different chain colors and path patterns can be rendered independently from a full drivetrain.
 
-| Silver straight chain | Black wrap chain | Gold loop chain |
-| --- | --- | --- |
-| ![Silver straight chain](examples/svg/chain-straight-silver.svg) | ![Black wrap chain](examples/svg/chain-wrap-black.svg) | ![Gold loop chain](examples/svg/chain-loop-gold.svg) |
+| Silver straight chain | Silver flattop chain | Black wrap chain | Gold loop chain |
+| --- | --- | --- | --- |
+| ![Silver straight chain](examples/svg/chain-straight-silver.svg) | ![Silver flattop chain](examples/svg/chain-flattop-silver.svg) | ![Black wrap chain](examples/svg/chain-wrap-black.svg) | ![Gold loop chain](examples/svg/chain-loop-gold.svg) |
 
 | 30T silver chainring | 34T black chainring | 40T alloy chainring |
 | --- | --- | --- |
@@ -163,12 +163,14 @@ renderChainringSvg(42, {
 renderChainSvg(18, 'wave', {
   style: 'raceRed',
   startLink: 'outer',
+  flatTop: true,
   showPins: true,
   showRollers: true
 });
 ```
 
 Supported path types are `straight`, `curve`, `wave`, `wrap`, and `loop`.
+Use `flatTop: true` for straight-edged chain plates like SRAM Flattop-style chains. It affects both inner and outer link outlines and works with every path type.
 
 ### Drivetrain
 
@@ -180,11 +182,15 @@ renderDrivetrainSvg({
   chainstay: 435,
   showText: true,
   style: 'blackGold',
+  styleConfig: {
+    flatTopChain: true
+  },
   animation: { enabled: true, rpm: 15 }
 });
 ```
 
 `chainstay` is in millimeters. When animation is enabled, the chainring, cassette, and chain use native SVG animation markup.
+Set `styleConfig.flatTopChain` to `true` when full drivetrain renders should use flattop chain plates.
 
 ## Presets
 

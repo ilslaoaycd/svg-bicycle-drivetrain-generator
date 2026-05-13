@@ -62,7 +62,8 @@ export class BicycleDrivetrainSVG {
       rollerHoleColor: styleConfig.rollerHoleColor,
       strokeColor: styleConfig.outlineColor || styleConfig.strokeColor,
       showPins: options.showPins,
-      showRollers: options.showRollers
+      showRollers: options.showRollers,
+      flatTop: options.flatTop
     };
 
     Object.keys(chainConfig).forEach((key) => {
