@@ -1,8 +1,8 @@
 # SVG Bicycle Drivetrain Generator
 
-Generate pure SVG strings for bicycle cassettes, chainrings, chains, and full drivetrain layouts. It works in browsers, bundlers, Node.js, server renderers, edge runtimes, and old-school script tags because the runtime is just JavaScript math returning SVG text.
+Generate pure SVG strings for bicycle cassettes, chainrings, chains, and full drivetrain layouts. It works in browsers, bundlers, Node.js, server renderers, edge runtimes, and good old script tags.
 
-The generator understands pitch-radius sprocket geometry, pitch-locked chain layouts, native SVG drivetrain animation, and layered cassette rendering with transparent stack styles.
+The generator understands sprocket geometry, chain layouts, drivetrain behavior, SVG Annimation, and layered cassette rendering.
 
 ## Demos
 
@@ -186,7 +186,7 @@ renderChainSvg(18, 'wave', {
 ```
 
 Supported path types are `straight`, `curve`, `wave`, `wrap`, and `loop`.
-Use `flatTop: true` for chain plates with a straight top edge like SRAM Flattop-style chains. It affects both inner and outer link outlines, keeps the lower waist curve, and works with every path type.
+Use `flatTop: true` for chain plates with a straight top edge like SRAM Flattop-style chains. It affects both inner and outer link paths, and works with every possible chain path.
 
 ### Drivetrain
 
@@ -206,7 +206,7 @@ renderDrivetrainSvg({
 ```
 
 `chainstay` is in millimeters. When animation is enabled, the chainring, cassette, and chain use native SVG animation markup.
-Set `styleConfig.flatTopChain` to `true` when full drivetrain renders should use flattop chain plates with a straight top edge and regular curved lower edge.
+Set `styleConfig.flatTopChain` to `true` when full drivetrain renders should use flattop chain links instead of normal links.
 
 ## Presets
 
@@ -236,7 +236,7 @@ Use these with any facade or convenience method:
 
 ## Runtime Design
 
-Runtime code has no filesystem, DOM, network, Express, or Node-specific dependencies. Every render method returns a plain SVG string. You decide whether to write it to a file, send it from an API, inline it into HTML, or use it in a frontend component.
+Runtime code has no dependencies, network needs, or anything else for that matter. It really just runs in Javascript. Every render method returns a plain SVG string. You decide whether to write it to a file, send it from an API, inline it into HTML, or use it in a frontend component.
 
 Build and example-generation scripts use Node.js, but the library runtime does not.
 
