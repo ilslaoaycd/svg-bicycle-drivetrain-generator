@@ -26,6 +26,14 @@ export class DrivetrainSVGGenerator {
     return this._minifySvg(svg);
   }
 
+  calculateLayout(options) {
+    const layout = this._buildLayout(options);
+    const animation = options.animation && options.animation.enabled
+      ? this._buildAnimationConfig(layout, options)
+      : null;
+    return { ...layout, animation };
+  }
+
   _buildLayout(options) {
     const rearRadius = this.geometry.getPitchRadius(options.selectedCog);
     const frontRadius = this.geometry.getPitchRadius(options.chainring);

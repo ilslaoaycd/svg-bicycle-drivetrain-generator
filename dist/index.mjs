@@ -195,6 +195,128 @@ var CassetteSVGGenerator = class {
   _minifySvg(svg) {
     return svg.replace(/-?\d+\.\d+/g, (value) => this._formatNumber(value)).replace(/\sclass="[^"]*"/g, "").replace(/\s\/>/g, "/>").replace(/>\s+</g, "><");
   }
+  _minifyFragment(svg) {
+    return svg.replace(/-?\d+\.\d+/g, (value) => this._formatNumber(value)).replace(/\s\/>/g, "/>").replace(/>\s+</g, "><");
+  }
+  calculateStack(teethArray, options = {}) {
+    const sortedTeeth = [...teethArray].sort((a, b) => b - a);
+    const cogWidth = options.cogWidth ?? 1.2;
+    const cogPitch = options.cogPitch ?? 3;
+    const stackWidth = sortedTeeth.length === 0 ? 0 : (sortedTeeth.length - 1) * cogPitch + cogWidth;
+    const lockringWidth = options.lockringWidth ?? 1;
+    return {
+      sortedCogs: sortedTeeth,
+      cogWidth,
+      cogPitch,
+      stackWidth,
+      lockringX: stackWidth + 0.2,
+      lockringWidth,
+      largestRadius: sortedTeeth.length ? this._getOuterRadius(sortedTeeth[0]) : 0,
+      smallestRadius: sortedTeeth.length ? this._getOuterRadius(sortedTeeth[sortedTeeth.length - 1]) : 0,
+      cogs: sortedTeeth.map((teeth, index) => ({
+        teeth,
+        index,
+        x: index * cogPitch,
+        centerX: index * cogPitch + cogWidth / 2,
+        width: cogWidth,
+        pitchRadius: this._getPitchRadius(teeth),
+        outerRadius: this._getOuterRadius(teeth)
+      }))
+    };
+  }
+  renderFrontGroup(teethArray, styleConfig = {}) {
+    const sortedTeeth = [...teethArray].sort((a, b) => b - a);
+    if (sortedTeeth.length === 0) return "";
+    const showText = styleConfig.showText !== false;
+    const textColor = styleConfig.textColor || null;
+    const textAngles = new Array(sortedTeeth.length);
+    const smallestTeeth = sortedTeeth[sortedTeeth.length - 1];
+    const firstStep = 2 * Math.PI / smallestTeeth;
+    let prevAngle = Math.round(-Math.PI / 2 / firstStep) * firstStep;
+    textAngles[sortedTeeth.length - 1] = prevAngle;
+    const minGap = 2 * (Math.PI / 180);
+    for (let i = sortedTeeth.length - 2; i >= 0; i--) {
+      const teeth = sortedTeeth[i];
+      const step = 2 * Math.PI / teeth;
+      let nextToothIndex = Math.floor(prevAngle / step) + 1;
+      let exactAngle = nextToothIndex * step;
+      while (exactAngle <= prevAngle + minGap) {
+        nextToothIndex++;
+        exactAngle = nextToothIndex * step;
+      }
+      textAngles[i] = exactAngle;
+      prevAngle = exactAngle;
+    }
+    let svg = '<g class="cassette-front-group">';
+    sortedTeeth.forEach((teeth, index) => {
+      const fill = this._resolveColor(index, styleConfig);
+      const stroke = this._resolveOutline(index, styleConfig);
+      const opacity = this._resolveOpacity(index, styleConfig);
+      let computedTextColor = textColor;
+      if (!computedTextColor) {
+        const isDefaultLargestCog = index === 0 && (!styleConfig.fillColors || styleConfig.fillColors.length === 0);
+        computedTextColor = isDefaultLargestCog ? "#94a3b8" : "#64748b";
+      }
+      svg += '<g class="cog-layer">';
+      svg += `<path d="${this._generateCogPath(teeth)}" fill="${fill}" stroke="${stroke}" `;
+      svg += `stroke-width="0.5" fill-rule="evenodd" opacity="${opacity}"/>`;
+      if (showText) {
+        const textRadius = this._getOuterRadius(teeth) - this.pitch * 0.19;
+        const exactAngle = textAngles[index];
+        const textX = textRadius * Math.cos(exactAngle);
+        const textY = textRadius * Math.sin(exactAngle);
+        let textRotation = exactAngle * 180 / Math.PI + 90;
+        const normalizedAngle = (exactAngle % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI);
+        if (normalizedAngle > Math.PI / 3 && normalizedAngle < 4 * Math.PI / 3) textRotation += 180;
+        const styleStr = !textColor ? "mix-blend-mode: difference; fill: white;" : `fill: ${computedTextColor};`;
+        svg += `<text x="${textX}" y="${textY}" font-size="2.4" `;
+        svg += 'font-family="monospace" font-weight="bold" text-anchor="middle" ';
+        svg += 'dominant-baseline="central" opacity="0.9" ';
+        svg += `style="pointer-events: none; user-select: none; ${styleStr}" `;
+        svg += `transform="rotate(${textRotation}, ${textX}, ${textY})">${teeth}T</text>`;
+      }
+      svg += "</g>";
+    });
+    svg += '<g class="lockring-group">';
+    svg += `<path d="${this._generateLockringPath()}" fill="#111827" stroke="#374151" `;
+    svg += 'stroke-width="0.5" fill-rule="evenodd"/>';
+    svg += "</g></g>";
+    return this._minifyFragment(svg);
+  }
+  renderSideGroup(teethArray, direction = "ltr", styleConfig = {}) {
+    const stack = this.calculateStack(teethArray, styleConfig);
+    if (stack.sortedCogs.length === 0) return "";
+    const displayCogs = direction === "ltr" ? stack.cogs : [...stack.cogs].reverse();
+    const maxRadius = stack.largestRadius;
+    const freehubRadius = styleConfig.freehubRadius ?? 9.5;
+    const showText = styleConfig.showText !== false;
+    const textColor = styleConfig.textColor || "#64748b";
+    let svg = '<g class="cassette-side-group">';
+    svg += `<rect x="-1" y="-${freehubRadius}" width="${stack.stackWidth + 2}" `;
+    svg += `height="${freehubRadius * 2}" fill="#475569" rx="0.5"/>`;
+    displayCogs.forEach((cog, displayIndex) => {
+      const trueIndex = stack.sortedCogs.indexOf(cog.teeth);
+      const xOffset = direction === "ltr" ? cog.x : displayIndex * stack.cogPitch;
+      const fill = this._resolveColor(trueIndex, styleConfig);
+      const stroke = this._resolveOutline(trueIndex, styleConfig);
+      svg += '<g class="cassette-cog-side">';
+      svg += `<rect x="${xOffset}" y="-${cog.outerRadius}" width="${stack.cogWidth}" height="${cog.outerRadius * 2}" `;
+      svg += `fill="${fill}" stroke="${stroke}" stroke-width="0.3" rx="0.2"/>`;
+      if (showText) {
+        const tx = xOffset + stack.cogWidth / 2;
+        const ty = Math.min(maxRadius + 4, cog.outerRadius + 4);
+        svg += `<text x="${tx}" y="${ty}" font-size="2.5" fill="${textColor}" `;
+        svg += 'font-family="monospace" text-anchor="middle" font-weight="bold" ';
+        svg += 'style="pointer-events: none; user-select: none;" ';
+        svg += `transform="rotate(90 ${tx} ${ty})">${cog.teeth}T</text>`;
+      }
+      svg += "</g>";
+    });
+    const lockringX = direction === "ltr" ? stack.lockringX : -1.2;
+    svg += `<rect class="cassette-lockring-side" x="${lockringX}" y="-11.8" width="${stack.lockringWidth}" height="23.6" fill="#111827" rx="0.2"/>`;
+    svg += "</g>";
+    return this._minifyFragment(svg);
+  }
   renderFront(teethArray, styleConfig = {}) {
     const sortedTeeth = [...teethArray].sort((a, b) => b - a);
     if (sortedTeeth.length === 0) return "";
@@ -594,6 +716,11 @@ var DrivetrainSVGGenerator = class {
     svg += this._renderLabels(layout, style, options);
     svg += "</svg>";
     return this._minifySvg(svg);
+  }
+  calculateLayout(options) {
+    const layout = this._buildLayout(options);
+    const animation = options.animation && options.animation.enabled ? this._buildAnimationConfig(layout, options) : null;
+    return { ...layout, animation };
   }
   _buildLayout(options) {
     const rearRadius = this.geometry.getPitchRadius(options.selectedCog);
@@ -1436,6 +1563,17 @@ var BicycleDrivetrainSVG = class {
     };
     return view === "side" ? this.cassetteGenerator.renderSide(cogs, options.direction || "ltr", styleConfig) : this.cassetteGenerator.renderFront(cogs, styleConfig);
   }
+  cassetteStack(cogs, options = {}) {
+    return this.cassetteGenerator.calculateStack(cogs, options);
+  }
+  cassetteGroup(cogs, options = {}) {
+    const view = options.view || "front";
+    const styleConfig = {
+      ...resolveStylePreset(options.style),
+      ...options.styleConfig || {}
+    };
+    return view === "side" ? this.cassetteGenerator.renderSideGroup(cogs, options.direction || "ltr", styleConfig) : this.cassetteGenerator.renderFrontGroup(cogs, styleConfig);
+  }
   chainring(teeth, options = {}) {
     return this.chainringGenerator.render(teeth, chainringStyle(options));
   }
@@ -1473,6 +1611,17 @@ var BicycleDrivetrainSVG = class {
       }
     });
   }
+  drivetrainLayout(options = {}) {
+    const { preset, style, styleConfig, ...rest } = options;
+    return this.drivetrainGenerator.calculateLayout({
+      ...resolveDrivetrainPreset(preset),
+      ...rest,
+      styleConfig: {
+        ...resolveStylePreset(style),
+        ...styleConfig || {}
+      }
+    });
+  }
 };
 function renderCassetteSvg(cogs, options = {}) {
   return new BicycleDrivetrainSVG(options.generatorConfig).cassette(cogs, options);
@@ -1486,6 +1635,15 @@ function renderChainSvg(linkCount, pathType = "straight", options = {}) {
 function renderDrivetrainSvg(options = {}) {
   return new BicycleDrivetrainSVG(options.generatorConfig).drivetrain(options);
 }
+function calculateCassetteStack(cogs, options = {}) {
+  return new BicycleDrivetrainSVG(options.generatorConfig).cassetteStack(cogs, options);
+}
+function renderCassetteGroup(cogs, options = {}) {
+  return new BicycleDrivetrainSVG(options.generatorConfig).cassetteGroup(cogs, options);
+}
+function calculateDrivetrainLayout(options = {}) {
+  return new BicycleDrivetrainSVG(options.generatorConfig).drivetrainLayout(options);
+}
 var index_default = BicycleDrivetrainSVG;
 export {
   BicycleDrivetrainSVG,
@@ -1494,8 +1652,11 @@ export {
   ChainringSVGGenerator,
   DrivetrainSVGGenerator,
   SprocketGeometry,
+  calculateCassetteStack,
+  calculateDrivetrainLayout,
   index_default as default,
   drivetrainPresets,
+  renderCassetteGroup,
   renderCassetteSvg,
   renderChainSvg,
   renderChainringSvg,

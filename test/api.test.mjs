@@ -4,12 +4,15 @@ import { readFile } from 'node:fs/promises';
 import { describe, test } from 'node:test';
 import {
   BicycleDrivetrainSVG,
+  calculateCassetteStack,
+  calculateDrivetrainLayout,
   CassetteSVGGenerator,
   ChainSVGGenerator,
   ChainringSVGGenerator,
   DrivetrainSVGGenerator,
   SprocketGeometry,
   drivetrainPresets,
+  renderCassetteGroup,
   renderCassetteSvg,
   renderChainSvg,
   renderChainringSvg,
@@ -25,6 +28,9 @@ describe('public API', () => {
     assert.equal(typeof ChainSVGGenerator, 'function');
     assert.equal(typeof DrivetrainSVGGenerator, 'function');
     assert.equal(typeof SprocketGeometry, 'function');
+    assert.equal(typeof calculateCassetteStack, 'function');
+    assert.equal(typeof calculateDrivetrainLayout, 'function');
+    assert.equal(typeof renderCassetteGroup, 'function');
     assert.equal(typeof renderCassetteSvg, 'function');
     assert.equal(typeof renderChainringSvg, 'function');
     assert.equal(typeof renderChainSvg, 'function');
@@ -50,6 +56,36 @@ describe('public API', () => {
   test('transparent cassette styles affect layer opacity', () => {
     const svg = renderCassetteSvg([10, 12, 14, 16], { style: 'xrayCassette' });
     assert.match(svg, /opacity="0\.2"/);
+  });
+
+  test('cassette stack layout and groups support external mounting', () => {
+    const stack = calculateCassetteStack([10, 12, 14, 16], { cogPitch: 3, cogWidth: 1.2 });
+    const sideGroup = renderCassetteGroup([10, 12, 14, 16], { view: 'side', style: 'classicSteel' });
+    const frontGroup = renderCassetteGroup([10, 12, 14, 16], { view: 'front', style: 'classicSteel' });
+
+    assert.deepEqual(stack.sortedCogs, [16, 14, 12, 10]);
+    assert.equal(stack.stackWidth, 10.2);
+    assert.equal(Number(stack.lockringX.toFixed(6)), 10.4);
+    assert.equal(stack.cogs[0].x, 0);
+    assert.match(sideGroup, /^<g class="cassette-side-group">/);
+    assert.match(frontGroup, /^<g class="cassette-front-group">/);
+  });
+
+  test('drivetrain layout exposes rear center, rotation, and cassette animation timing', () => {
+    const layout = calculateDrivetrainLayout({
+      chainring: 30,
+      cogs: [10, 12, 14, 16, 18],
+      selectedCog: 16,
+      chainstay: 420,
+      animation: { enabled: true, rpm: 8 }
+    });
+
+    assert.equal(layout.rearCenter.x, 0);
+    assert.equal(layout.rearCenter.y, 0);
+    assert.equal(typeof layout.rearRotation, 'number');
+    assert.equal(layout.animation.frontRpm, 8);
+    assert.equal(layout.animation.cassetteRpm, 15);
+    assert.equal(layout.animation.cassetteDuration, 4);
   });
 
   test('flattop chain option removes only the top inward waist curve', () => {

@@ -45,6 +45,21 @@ export class BicycleDrivetrainSVG {
       : this.cassetteGenerator.renderFront(cogs, styleConfig);
   }
 
+  cassetteStack(cogs, options = {}) {
+    return this.cassetteGenerator.calculateStack(cogs, options);
+  }
+
+  cassetteGroup(cogs, options = {}) {
+    const view = options.view || 'front';
+    const styleConfig = {
+      ...resolveStylePreset(options.style),
+      ...(options.styleConfig || {})
+    };
+    return view === 'side'
+      ? this.cassetteGenerator.renderSideGroup(cogs, options.direction || 'ltr', styleConfig)
+      : this.cassetteGenerator.renderFrontGroup(cogs, styleConfig);
+  }
+
   chainring(teeth, options = {}) {
     return this.chainringGenerator.render(teeth, chainringStyle(options));
   }
@@ -86,6 +101,18 @@ export class BicycleDrivetrainSVG {
       }
     });
   }
+
+  drivetrainLayout(options = {}) {
+    const { preset, style, styleConfig, ...rest } = options;
+    return this.drivetrainGenerator.calculateLayout({
+      ...resolveDrivetrainPreset(preset),
+      ...rest,
+      styleConfig: {
+        ...resolveStylePreset(style),
+        ...(styleConfig || {})
+      }
+    });
+  }
 }
 
 export function renderCassetteSvg(cogs, options = {}) {
@@ -102,6 +129,18 @@ export function renderChainSvg(linkCount, pathType = 'straight', options = {}) {
 
 export function renderDrivetrainSvg(options = {}) {
   return new BicycleDrivetrainSVG(options.generatorConfig).drivetrain(options);
+}
+
+export function calculateCassetteStack(cogs, options = {}) {
+  return new BicycleDrivetrainSVG(options.generatorConfig).cassetteStack(cogs, options);
+}
+
+export function renderCassetteGroup(cogs, options = {}) {
+  return new BicycleDrivetrainSVG(options.generatorConfig).cassetteGroup(cogs, options);
+}
+
+export function calculateDrivetrainLayout(options = {}) {
+  return new BicycleDrivetrainSVG(options.generatorConfig).drivetrainLayout(options);
 }
 
 export {
